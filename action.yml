@@ -34,9 +34,11 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v7
       with:
         node-version: 22
+        # The action only runs npx: never try to cache the caller's dependencies.
+        package-manager-cache: false
     - id: run
       shell: bash
       # Inputs go through env, never straight into the script, to avoid injection.
