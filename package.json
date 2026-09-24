@@ -1,0 +1,62 @@
+{
+  "name": "geocheck",
+  "version": "0.1.0",
+  "description": "How findable is a website on Google and in AI answer engines (ChatGPT, Perplexity, Claude, AI Overviews)? A zero-dependency SEO + GEO audit CLI.",
+  "type": "module",
+  "bin": {
+    "geocheck": "dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "docs/checks.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "tsx src/cli.ts",
+    "prepublishOnly": "pnpm run typecheck && pnpm run test && pnpm run build"
+  },
+  "keywords": [
+    "seo",
+    "geo",
+    "generative-engine-optimization",
+    "ai-search",
+    "llm",
+    "chatgpt",
+    "perplexity",
+    "robots-txt",
+    "sitemap",
+    "json-ld",
+    "local-seo",
+    "audit",
+    "cli"
+  ],
+  "author": "Alessio Carnevale",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Axeeh/geocheck.git"
+  },
+  "homepage": "https://github.com/Axeeh/geocheck#readme",
+  "bugs": "https://github.com/Axeeh/geocheck/issues",
+  "packageManager": "pnpm@10.33.2",
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

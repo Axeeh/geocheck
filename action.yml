@@ -1,0 +1,59 @@
+name: geocheck
+description: Audit how findable a site is on Google and in AI answer engines, and fail the job on serious issues.
+author: Alessio Carnevale
+branding:
+  icon: search
+  color: green
+
+inputs:
+  url:
+    description: URL of the site to audit
+    required: true
+  fail-on:
+    description: Fail if an issue at this severity or above exists (high, medium, low, never)
+    required: false
+    default: high
+  min-score:
+    description: Fail if the overall score is below this value (0-100)
+    required: false
+    default: ""
+  max-pages:
+    description: Pages to parse
+    required: false
+    default: "30"
+  version:
+    description: geocheck version from npm
+    required: false
+    default: latest
+
+outputs:
+  report:
+    description: Path of the Markdown report
+    value: ${{ steps.run.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - id: run
+      shell: bash
+      # Inputs go through env, never straight into the script, to avoid injection.
+      env:
+        GEOCHECK_URL: ${{ inputs.url }}
+        GEOCHECK_FAIL_ON: ${{ inputs.fail-on }}
+        GEOCHECK_MIN_SCORE: ${{ inputs.min-score }}
+        GEOCHECK_MAX_PAGES: ${{ inputs.max-pages }}
+        GEOCHECK_VERSION: ${{ inputs.version }}
+      run: |
+        report="$RUNNER_TEMP/geocheck-report.md"
+        args=("$GEOCHECK_URL" --format md --output "$report" --quiet --fail-on "$GEOCHECK_FAIL_ON" --max-pages "$GEOCHECK_MAX_PAGES")
+        if [ -n "$GEOCHECK_MIN_SCORE" ]; then args+=(--min-score "$GEOCHECK_MIN_SCORE"); fi
+        echo "report=$report" >> "$GITHUB_OUTPUT"
+        set +e
+        npx --yes "geocheck@$GEOCHECK_VERSION" "${args[@]}"
+        code=$?
+        set -e
+        if [ -f "$report" ]; then cat "$report" >> "$GITHUB_STEP_SUMMARY"; fi
+        exit $code

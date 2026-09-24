@@ -1,0 +1,19 @@
+# Dependencies (.pnpm-store.nosync holds the pnpm virtual store, see .npmrc)
+node_modules
+.pnpm-store.nosync/
+
+# Build output
+dist/
+
+# Reports written while trying the tool
+*.report.md
+geocheck-report.*
+
+# OS / editor
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Local agent state
+.claude/
